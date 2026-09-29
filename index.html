@@ -255,17 +255,18 @@
                 <div class="relative w-full overflow-hidden rounded-lg border-2 border-black shadow-mag">
                     
                     <!-- VIDEO UTAMA (AUTOPLAY) -->
-                    <video class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105" 
-                           autoplay 
-                           muted 
-                           loop 
-                           playsinline 
-                           controls 
-                           preload="auto">
-                        <source src="video-promosi.mp4" type="video/mp4">
-                        Browser Anda tidak mendukung video HTML5.
-                    </video>
+                   <video
+    class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+    autoplay
+    muted
+    loop
+    playsinline
+    controls
+    preload="metadata">
 
+    <source src="./video-promosi.mp4" type="video/mp4">
+    Browser Anda tidak mendukung video.
+</video>
                     <!-- OVERLAY GRADIENT -->
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none"></div>
 
