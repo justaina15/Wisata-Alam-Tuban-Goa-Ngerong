@@ -1000,65 +1000,42 @@
             }
         }
 
-        // 2. Nature Audio Sound Synthesizer (Web Audio API - No external file needed!)
-        let audioCtx = null;
-        let isPlaying = false;
-        let noiseNode = null;
+        // 2. Audio Player dari Link URL
+let audio = null;
+let isPlaying = false;
 
-        function toggleNatureSound() {
-            const soundBtn = document.getElementById('soundToggleBtn');
-            const soundIcon = document.getElementById('soundIcon');
+// Masukkan link file audio kamu di sini:
+const AUDIO_URL = 'Suara Ngerong.mp3'; 
 
-            if (!isPlaying) {
-                try {
-                    const AudioContext = window.AudioContext || window.webkitAudioContext;
-                    audioCtx = new AudioContext();
+function toggleNatureSound() {
+    const soundBtn = document.getElementById('soundToggleBtn');
+    const soundIcon = document.getElementById('soundIcon');
 
-                    // Create ambient water river stream synthesis
-                    const bufferSize = audioCtx.sampleRate * 2;
-                    const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                    const output = noiseBuffer.getChannelData(0);
+    // Inisialisasi audio jika belum ada
+    if (!audio) {
+        audio = new Audio(AUDIO_URL);
+        audio.loop = true; // Mengulang otomatis jika audio selesai
+    }
 
-                    for (let i = 0; i < bufferSize; i++) {
-                        output[i] = Math.random() * 2 - 1;
-                    }
-
-                    const whiteNoise = audioCtx.createBufferSource();
-                    whiteNoise.buffer = noiseBuffer;
-                    whiteNoise.loop = true;
-
-                    const filter = audioCtx.createBiquadFilter();
-                    filter.type = 'bandpass';
-                    filter.frequency.value = 400;
-                    filter.Q.value = 3.0;
-
-                    const gain = audioCtx.createGain();
-                    gain.gain.value = 0.08;
-
-                    whiteNoise.connect(filter);
-                    filter.connect(gain);
-                    gain.connect(audioCtx.destination);
-
-                    whiteNoise.start();
-                    noiseNode = whiteNoise;
-
-                    isPlaying = true;
-                    soundBtn.classList.remove('bg-willow');
-                    soundBtn.classList.add('bg-alice', 'text-white');
-                    soundIcon.className = "fa-solid fa-volume-high text-base";
-                } catch (e) {
-                    console.log('Audio init prevented or not supported', e);
-                }
-            } else {
-                if (audioCtx) {
-                    audioCtx.close();
-                }
-                isPlaying = false;
-                soundBtn.classList.remove('bg-alice', 'text-white');
-                soundBtn.classList.add('bg-willow', 'text-black');
-                soundIcon.className = "fa-solid fa-volume-xmark text-base";
-            }
-        }
+    if (!isPlaying) {
+        audio.play()
+            .then(() => {
+                isPlaying = true;
+                soundBtn.classList.remove('bg-willow', 'text-black');
+                soundBtn.classList.add('bg-alice', 'text-white');
+                soundIcon.className = "fa-solid fa-volume-high text-base";
+            })
+            .catch((e) => {
+                console.log('Gagal memutar audio:', e);
+            });
+    } else {
+        audio.pause();
+        isPlaying = false;
+        soundBtn.classList.remove('bg-alice', 'text-white');
+        soundBtn.classList.add('bg-willow', 'text-black');
+        soundIcon.className = "fa-solid fa-volume-xmark text-base";
+    }
+}
 
         // 3. Video Modal Logic
         function openVideoModal() {
