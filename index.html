@@ -1000,40 +1000,52 @@
             }
         }
 
-        // 2. Audio Player dari Link URL
+      // 2. Audio Player dari Link URL
 let audio = null;
 let isPlaying = false;
 
-// Masukkan link file audio kamu di sini:
-const AUDIO_URL = 'Suara Ngerong.mp3'; 
+// Hindari spasi langsung pada URL (gunakan %20 atau ganti nama file jadi suara-ngerong.mp3)
+const AUDIO_URL = 'Suara%20Ngerong.mp3'; 
 
 function toggleNatureSound() {
     const soundBtn = document.getElementById('soundToggleBtn');
     const soundIcon = document.getElementById('soundIcon');
 
+    if (!soundBtn || !soundIcon) return;
+
     // Inisialisasi audio jika belum ada
     if (!audio) {
         audio = new Audio(AUDIO_URL);
-        audio.loop = true; // Mengulang otomatis jika audio selesai
+        audio.loop = true;
+        
+        // Handle jika file audio tidak ditemukan atau gagal load
+        audio.onerror = (e) => {
+            console.error('File audio tidak dapat ditemukan atau gagal diputar:', e);
+            alert('File audio tidak ditemukan. Pastikan nama file sudah sesuai.');
+        };
     }
 
     if (!isPlaying) {
         audio.play()
             .then(() => {
                 isPlaying = true;
-                soundBtn.classList.remove('bg-willow', 'text-black');
+                soundBtn.classList.remove('bg-willow');
                 soundBtn.classList.add('bg-alice', 'text-white');
-                soundIcon.className = "fa-solid fa-volume-high text-base";
+                
+                soundIcon.classList.remove('fa-volume-xmark');
+                soundIcon.classList.add('fa-volume-high');
             })
             .catch((e) => {
-                console.log('Gagal memutar audio:', e);
+                console.error('Autoplay diblokir atau file gagal dimuat:', e);
             });
     } else {
         audio.pause();
         isPlaying = false;
         soundBtn.classList.remove('bg-alice', 'text-white');
-        soundBtn.classList.add('bg-willow', 'text-black');
-        soundIcon.className = "fa-solid fa-volume-xmark text-base";
+        soundBtn.classList.add('bg-willow');
+        
+        soundIcon.classList.remove('fa-volume-high');
+        soundIcon.classList.add('fa-volume-xmark');
     }
 }
 
